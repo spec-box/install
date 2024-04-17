@@ -1,0 +1,44 @@
+services:
+  database:
+    image: postgres:15-alpine
+
+    restart: always
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: tms
+    
+    ports:
+      - "5432:5432"
+    
+    volumes: 
+      - database:/var/lib/postgresql/data
+
+
+  backend:
+
+    build: 
+      context: api
+      dockerfile: SpecBox.WebApi/Dockerfile
+    image: "pk72/spec-box:${VERSION}"
+    command: dotnet ./SpecBox.WebApi.dll --urls=http://+:80
+    ports: 
+      - "8080:80"
+    depends_on:
+      - database
+
+  frontend:
+    build:
+      context: web
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+
+
+volumes:
+  database:
+    driver: local
