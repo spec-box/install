@@ -16,7 +16,7 @@ docker pull docker.io/pk72/spec-box
 Startup database if you don't have database already.
 ```shell
 docker run --name postgres -e POSTGRES_PASSWORD=123 -e POSTGRES_DB=tms -p 5432:5432 -d postgres
-```shell
+```
 
 Apply the migrations (adjust the connection string if you're using your own database.
 ```shell
