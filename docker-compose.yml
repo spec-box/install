@@ -16,26 +16,17 @@ services:
       - database:/var/lib/postgresql/data
 
 
-  backend:
+  specbox:
 
     build: 
-      context: api
-      dockerfile: SpecBox.WebApi/Dockerfile
-    image: "pk72/spec-box:${VERSION}"
+      context: . 
+      dockerfile: Dockerfile
+    image: "pk72/spec-box:${VERSION:-0.1.1}"
     command: dotnet ./SpecBox.WebApi.dll --urls=http://+:80
     ports: 
-      - "8080:80"
-    depends_on:
-      - database
-
-  frontend:
-    build:
-      context: web
-      dockerfile: Dockerfile
-    ports:
       - "80:80"
     depends_on:
-      - backend
+      - database
 
 
 

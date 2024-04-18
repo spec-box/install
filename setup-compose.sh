@@ -8,5 +8,9 @@ git clone https://github.com/spec-box/web.git
 
 export VERSION=0.0.1
 
-echo 'Running docker build'
-docker build .
+echo 'Running docker-compose build'
+docker-compose build
+
+
+echo 'Starting service on port 80'
+docker-compose up
