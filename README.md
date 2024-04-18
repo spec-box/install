@@ -31,7 +31,14 @@ docker run -p 8080:80 -ti \
  docker.io/pk72/spec-box:latest
 ```
 
-## PUSHING IMAGE
+## Pushing an IMAGE
+Clone the project, and run setup.sh
+```shell
+git clone https://github.com/spec-box/install.git
+cd install
+sh ./setup.sh
+```
+
 Before pushing you've to login to docker hub with account which has the rights to push.
 
 ```shell
