@@ -21,7 +21,7 @@ services:
     build: 
       context: . 
       dockerfile: Dockerfile
-    image: "pk72/spec-box:${VERSION:-0.1.1}"
+    image: "pk72/spec-box:${VERSION:-latest}"
     command: dotnet ./SpecBox.WebApi.dll --urls=http://+:80
     ports: 
       - "80:80"
