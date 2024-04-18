@@ -2,13 +2,14 @@
 docker-compose based installation - all at once
 
 
-Pre-requisites
+## Pre-requisites
 
 - git
-- docker and docker-compose
+- docker
 
 
+## Installation
 
-Installation
-
+```shell
 sh ./setup.sh
+```
