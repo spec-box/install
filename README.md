@@ -30,3 +30,24 @@ docker run -p 8080:80 -ti \
  -e ConnectionStrings__default='host=postgres;port=5432;database=tms;user name=postgres;password=123' \
  docker.io/pk72/spec-box:latest
 ```
+
+## PUSHING IMAGE
+Before pushing you've to login to docker hub with account which has the rights to push.
+
+```shell
+docker login
+```
+
+Then perform a build and push the image to latest.
+
+
+```shell
+docker-compose build
+docker push docker.io/pk72/spec-box
+```
+
+And with the version tag as the following:
+```shell
+VERSION=0.1.1 docker push docker.io/pk72/spec-box
+```
+
