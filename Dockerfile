@@ -20,6 +20,8 @@ COPY ./api/. .
 RUN dotnet restore
 
 # publish
+WORKDIR /app/SpecBox.Migrations
+RUN dotnet publish -c Release -o out
 WORKDIR /app/SpecBox.WebApi
 RUN dotnet publish -c Release -o out
 RUN dotnet tool install -v d --tool-path ./out thinkinghome.migrator.cli
@@ -41,6 +43,7 @@ RUN ln -fs /usr/share/zoneinfo/Europe/Moscow /etc/localtime && dpkg-reconfigure 
 # prepare application
 WORKDIR /app
 COPY --from=build /app/SpecBox.WebApi/out ./
+COPY --from=build /app/SpecBox.Migrations/out ./migrations/.
 COPY --from=frontend /web ./wwwroot/
 RUN rm -f appsettings.*.json
 
