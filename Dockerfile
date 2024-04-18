@@ -9,6 +9,7 @@ COPY /web/. /web/
 
 RUN sed -i 's/localhost\:5059/localhost/g' vite.config.ts
 RUN npm ci
+RUN npm run build
 
 
 # BUILD .NET CORE APP
@@ -44,7 +45,7 @@ RUN ln -fs /usr/share/zoneinfo/Europe/Moscow /etc/localtime && dpkg-reconfigure 
 WORKDIR /app
 COPY --from=build /app/SpecBox.WebApi/out ./
 COPY --from=build /app/SpecBox.Migrations/out ./migrations/.
-COPY --from=frontend /web ./wwwroot/
+COPY --from=frontend /web/dist/. ./wwwroot/
 RUN rm -f appsettings.*.json
 
 EXPOSE 80
