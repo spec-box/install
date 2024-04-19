@@ -25,11 +25,29 @@ docker run -it --link postgres:postgres --entrypoint ./migrate-database docker.i
 
 ## Ready to run
 ```shell
-docker run -p 8080:80 -ti \
+docker run -p 80:80 -ti \
  --link postgres:postgres \
  -e ConnectionStrings__default='host=postgres;port=5432;database=tms;user name=postgres;password=123' \
  docker.io/pk72/spec-box:latest
 ```
+
+
+## Clone the example data
+```shell
+git clone https://github.com/spec-box/example.git
+cd example
+```
+
+## Validate the example data
+```shell
+docker run -it --entrypoint npx --mount type=bind,source=./,target=/app/specs docker.io/pk72/spec-box-sync:latest spec-box validate
+```
+
+## Sync the example data (i.e. upload to the project database)
+```shell
+docker run --network="host" -it --entrypoint npx --mount type=bind,source=./,target=/app/specs docker.io/pk72/spec-box-sync:latest spec-box sync
+```
+
 
 ## Pushing an IMAGE
 Clone the project, and run setup.sh
