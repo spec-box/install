@@ -43,12 +43,19 @@ cd example
 docker run -it --entrypoint npx --mount type=bind,source=./,target=/app/specs docker.io/pk72/spec-box-sync:latest spec-box validate
 ```
 
-## Sync the example data (i.e. upload to the project database)
+## Sync the example data (i.e. upload to the project database).
 ```shell
 docker run --network="host" -it --entrypoint npx --mount type=bind,source=./,target=/app/specs docker.io/pk72/spec-box-sync:latest spec-box sync
 ```
 
+## Ok, you're ready to view the results. open the browser and see the results.
+```url
+http://localhost/
+```
 
+
+
+### FOR DEVELOPERS ONLY!
 ## Pushing an IMAGE
 Clone the project, and run setup.sh
 ```shell
