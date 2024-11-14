@@ -47,19 +47,19 @@
 
 2. Загрузите проект на свой компьютер
 
-```sh
-git clone https://github.com/spec-box/install.git spec-box-install
-cd spec-box-install
-```
+   ```sh
+   git clone https://github.com/spec-box/install.git spec-box-install
+   cd spec-box-install
+   ```
 
 3. Залогиньтесь в docker
 
-```sh
-docker login
-```
+   ```sh
+   docker login
+   ```
 
 Обновите версию в файле `./setup.sh`, соберите образ и загрузите в registry
 
-```sh
-./setup.sh
-```
+   ```sh
+   ./setup.sh
+   ```

@@ -12,4 +12,4 @@ export VERSION=1.0.0
 
 echo 'Running docker build'
 
-docker buildx build --platform linux/arm64,linux/amd64 --tag specbox/web:$VERSION .
+docker buildx build --push --platform linux/arm64,linux/amd64 --tag specbox/web:$VERSION --tag latest .
