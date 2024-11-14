@@ -1,19 +1,17 @@
 # BUILD FRONTEND
-FROM node:latest as frontend
-
-RUN npm install -g npm@10.5.2
+FROM node:18 as frontend
 
 WORKDIR /web
 
 COPY /web/. /web/
 
-RUN sed -i 's/localhost\:5059/localhost/g' vite.config.ts
-RUN npm ci
+RUN npm i
 RUN npm run build
 
 
 # BUILD .NET CORE APP
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
 # copy csproj and restore as distinct layers
@@ -21,15 +19,14 @@ COPY ./api/. .
 RUN dotnet restore
 
 # publish
-WORKDIR /app/SpecBox.Migrations
-RUN dotnet publish -c Release -o out
 WORKDIR /app/SpecBox.WebApi
 RUN dotnet publish -c Release -o out
-RUN dotnet tool install -v d --tool-path ./out thinkinghome.migrator.cli
-RUN find / -type f -name 'migrate-database' -print
+
+WORKDIR /app/SpecBox.CLI
+RUN dotnet publish -c Release -o out
 
 # PREPARE RUNTIME
-FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 
 # install utils
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y locales tzdata wget iputils-ping
@@ -44,13 +41,10 @@ RUN ln -fs /usr/share/zoneinfo/Europe/Moscow /etc/localtime && dpkg-reconfigure 
 # prepare application
 WORKDIR /app
 COPY --from=build /app/SpecBox.WebApi/out ./
-COPY --from=build /app/SpecBox.Migrations/out ./migrations/.
+COPY --from=build /app/SpecBox.CLI/out ./
 COPY --from=frontend /web/dist/. ./wwwroot/
 RUN rm -f appsettings.*.json
 
 EXPOSE 80
 ENV ASPNETCORE_ENVIRONMENT=Production
 ENTRYPOINT ["dotnet", "SpecBox.WebApi.dll", "--urls=http://+:80"]
-
-
-

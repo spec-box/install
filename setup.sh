@@ -1,12 +1,15 @@
 #!/bin/sh
 
+rm -rf api web
+
 echo 'Cloning repos...'
 git clone https://github.com/spec-box/api.git
 git clone https://github.com/spec-box/web.git
-#git clone https://github.com/spec-box/sync.git 
-#git clone https://github.com/spec-box/text-parser.git
 
-export VERSION=0.0.1
+rm ./web/package-lock.json
+
+export VERSION=1.0.0
 
 echo 'Running docker build'
-docker build .
+
+docker buildx build --platform linux/arm64,linux/amd64 --tag specbox/web:$VERSION .

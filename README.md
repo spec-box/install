@@ -1,85 +1,65 @@
 # install
 
-## Pre-requisites
+## Как запустить
+
+1. Загрузите docker образ `specbox/web` на свой компьютер
+
+   ```sh
+   docker pull docker.io/specbox/web:1.0.0
+   ```
+
+2. Запустите БД Postgres
+
+   ```sh
+   docker run --name postgres -e POSTGRES_PASSWORD=123 -e POSTGRES_DB=tms -p 5432:5432 -d postgres
+   ```
+
+3. Запустите контейнер SpecBox
+
+   ```sh
+   docker run -p 8080:80 -ti \
+     --name specbox \
+     --link postgres:postgres \
+     -e ConnectionStrings__default='host=postgres;port=5432;database=tms;user name=postgres;password=123' \
+     specbox/web:1.0.0
+   ```
+
+4. В отдельной вкладке тенминала запустите инициализацию БД (инициализировать БД необходимо только при первом запуске и при обновлении SpecBox)
+
+   ```sh
+   docker exec -ti specbox ./SpecBox.CLI migrate
+   ```
+
+5. Если необходимо, запустите команду создания нового проекта (в отдельной вкладке тенминала)
+
+   ```sh
+   docker exec -ti specbox ./SpecBox.CLI project create <project-id> "<Название проекта>"
+   ```
+
+6. Вы можете выгрузить в SpecBox [наш демонстрационный проект](https://github.com/spec-box/example). Перед выгрузкой укажите ID проекта и хост Spec Box в конфигурационном файле `.tms.json`.
+
+### ДЛЯ РАЗРАБОТЧИКОВ!
+
+1. Установите:
 
 - git
 - docker
 
+2. Загрузите проект на свой компьютер
 
-## Pull the spec-box image
-```shell
-docker pull docker.io/pk72/spec-box
+```sh
+git clone https://github.com/spec-box/install.git spec-box-install
+cd spec-box-install
 ```
 
-## Initialize database (ONCE!)
+3. Залогиньтесь в docker
 
-Startup database if you don't have database already.
-```shell
-docker run --name postgres -e POSTGRES_PASSWORD=123 -e POSTGRES_DB=tms -p 5432:5432 -d postgres
-```
-
-Apply the migrations (adjust the connection string if you're using your own database.
-```shell
-docker run -it --link postgres:postgres --entrypoint ./migrate-database docker.io/pk72/spec-box:latest postgres "host=postgres;port=5432;database=tms;user name=postgres;password=123" ./migrations/SpecBox.Migrations.dll
-```
-
-## Ready to run
-```shell
-docker run -p 80:80 -ti \
- --link postgres:postgres \
- -e ConnectionStrings__default='host=postgres;port=5432;database=tms;user name=postgres;password=123' \
- docker.io/pk72/spec-box:latest
-```
-
-
-## Clone the example data
-```shell
-git clone https://github.com/spec-box/example.git
-cd example
-```
-
-## Validate the example data
-```shell
-docker run -it --entrypoint npx --mount type=bind,source=./,target=/app/specs docker.io/pk72/spec-box-sync:latest spec-box validate
-```
-
-## Sync the example data (i.e. upload to the project database).
-```shell
-docker run --network="host" -it --entrypoint npx --mount type=bind,source=./,target=/app/specs docker.io/pk72/spec-box-sync:latest spec-box sync
-```
-
-## Ok, you're ready to view the results. open the browser and see the results.
-```url
-http://localhost/
-```
-
-
-
-### FOR DEVELOPERS ONLY!
-## Pushing an IMAGE
-Clone the project, and run setup.sh
-```shell
-git clone https://github.com/spec-box/install.git
-cd install
-sh ./setup.sh
-```
-
-Before pushing you've to login to docker hub with account which has the rights to push.
-
-```shell
+```sh
 docker login
 ```
 
-Then perform a build and push the image to latest.
+Обновите версию в файле `./setup.sh`, соберите образ и загрузите в registry
 
-
-```shell
-docker-compose build
-docker push docker.io/pk72/spec-box
+```sh
+./setup.sh
 ```
-
-And with the version tag as the following:
-```shell
-VERSION=0.1.1 docker push docker.io/pk72/spec-box
-```
-
