@@ -1,4 +1,4 @@
-# install
+# Spec Box Docker Image
 
 ## Как запустить
 
@@ -58,7 +58,7 @@
    docker login
    ```
 
-Обновите версию в файле `./setup.sh`, соберите образ и загрузите в registry
+4. Обновите версию в файле `./setup.sh`, соберите образ и загрузите в registry
 
    ```sh
    ./setup.sh
